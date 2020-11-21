@@ -7,6 +7,8 @@ from discord.ext import commands
 from youtube_search import YoutubeSearch
 import youtube_dl
 
+from styling import style
+
 
 ydl_opt = {
         'format': 'bestaudio/best',
@@ -30,8 +32,8 @@ async def get_member(member_name, ctx):
         if ((f"{member.name.lower()}#{member.discriminator}" == member_name) or 
             (member.nick and f"{member.nick.lower()}#{member.discriminator}" == member_name)):
 
+            print("Name/Discriminator Found")
             return member
-            print("Found successful name/nick#discriminator combination... terminating search for user")
         elif member.name.lower() == member_name:
             members.append(member)
         elif member.nick and member.nick.lower() == member_name:  
@@ -39,7 +41,7 @@ async def get_member(member_name, ctx):
     if members:
         if len(members) > 1:
             embed = discord.Embed(
-                description = f"**Found multiple users, may need to include a discriminator for a more precise result Name#0000**"
+                description = f"**{style('Found multiple users, may need to include a discriminator for a more precise result Name#0000')}**"
             )
             await ctx.send(embed=embed)
 
@@ -106,7 +108,6 @@ async def timeout(guild_id):
     if voice.is_playing():
         return
     else:
-        print("Guild is not playing")
         await asyncio.sleep(10)        
         if (datetime.datetime.utcnow() - guilds[guild_id]['lastaction']).total_seconds() > 20:
             await voice.disconnect()
@@ -143,7 +144,7 @@ async def play(ctx, *args):
 
 
         embed = discord.Embed(
-            description = f"**Queued [{results.videos[0]['title']}]({url}) [{ctx.author.mention}]**"
+            description = f"**{style('Queued')} [{results.videos[0]['title']}]({url}) [{ctx.author.mention}]**"
         )
         await ctx.send(embed=embed)
 
@@ -151,8 +152,8 @@ async def play(ctx, *args):
         guilds[ctx.guild.id]['lastaction'] = datetime.datetime.utcnow()
 
         embed = discord.Embed(
-            title = "ɴᴏᴡ ᴘʟᴀʏɪɴɢ",
-            description = f"**[ᴀᴍᴇʀɪᴄᴀɴ ʙᴏʏ]({url}) [{ctx.author.mention}]**"
+            title = f"{style('Now Playing')}",
+            description = f"**[{style(results.videos[0]['title'])}]({url}) [{ctx.author.mention}]**"
         )
         await ctx.send(embed=embed)
 
@@ -214,8 +215,8 @@ async def spotifywith(ctx, *args):
             url = await get_url(results)
 
             embed = discord.Embed(
-                title = f"**ѕρσтιƒу ωιтн**",
-                description = f"**ɴᴏᴡ ᴘʟᴀʏɪɴɢ [{results.videos[0]['title']}]({url}) [{ctx.author.mention}]**"
+                title = f"**{style(f'Spotify with {member.name}')}**",
+                description = f"**{style('Now Playing')} [{style(results.videos[0]['title'])}]({url}) [{ctx.author.mention}]**"
             )
             await ctx.send(embed=embed)
 
@@ -265,7 +266,7 @@ async def undo(ctx):
             url = await get_url(results)
 
             embed = discord.Embed(
-                description = f"**Removed [{results.videos[0]['title']}]({url}) from queue [{ctx.author.mention}]**"
+                description = f"**{style('Removed')} [{style(results.videos[0]['title'])}]({url}) {style('from Queue')} [{ctx.author.mention}]**"
             )
             await ctx.send(embed=embed)
 
@@ -278,7 +279,7 @@ async def clear(ctx):
         guilds[ctx.guild.id]['queue'] = list()
 
         embed = discord.Embed(
-            description = f"**Cleared Queue [{ctx.author.mention}]**"
+            description = f"**{style('Cleared Queue')}[{ctx.author.mention}]**"
         )
         await ctx.send(embed=embed)
 
