@@ -1,4 +1,6 @@
 #  When a play or playwith command is called, after voice is retrieved check how many users in that channel. If zero then leave voice channel and call function again with same arguments
+
+#  Make it so when bot is alone in server start timeout
 import os
 import asyncio
 import datetime
@@ -40,6 +42,7 @@ async def initialize_guild(guild_id):
 
 
 async def get_voice(ctx):
+    global guilds
     """Will return existing guild voice or create and return one if one is not found"""
     if not guilds[ctx.guild.id]['voice']:
         channel = ctx.author.voice.channel
@@ -224,6 +227,7 @@ async def playwith(ctx, *args):
 
 @client.event
 async def on_member_update(before, after):
+    global guilds
     if before.guild.id in guilds and 'member' in guilds[before.guild.id] and guilds[before.guild.id]['member'] and guilds[before.guild.id]['member'].id == before.id:
         before_song = await get_spotify_song(before.activities)
         after_song = await get_spotify_song(after.activities)
