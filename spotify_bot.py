@@ -1,3 +1,4 @@
+#  When a play or playwith command is called, after voice is retrieved check how many users in that channel. If zero then leave voice channel and call function again with same arguments
 import os
 import asyncio
 import datetime
@@ -79,12 +80,15 @@ async def play(ctx, *args):
     if not ctx.guild.id in guilds:
         await initialize_guild(ctx.guild.id)
 
-    voice = await get_voice(ctx)
+    if ctx.author.voice:
+        voice = await get_voice(ctx)
+    else:
+        return
 
     if guilds[ctx.guild.id]['member']:
         await stop_playwith(voice, ctx.guild.id)
 
-    if arg.startswith(('https://www.youtube.com')):
+    if arg.startswith(('https://')):
         url = arg
         video_title = youtube.get_title(url)
     else:
@@ -173,7 +177,10 @@ async def playwith(ctx, *args):
         print("Could not find member")
         return
 
-    voice = await get_voice(ctx)
+    if ctx.author.voice:
+        voice = await get_voice(ctx)
+    else:
+        return
 
 
     if guilds[ctx.guild.id]['member']:
