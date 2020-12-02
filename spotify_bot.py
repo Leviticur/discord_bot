@@ -1,6 +1,3 @@
-#  When a play or playwith command is called, after voice is retrieved check how many users in that channel. If zero then leave voice channel and call function again with same arguments
-
-#  Make it so when bot is alone in server start timeout
 import os
 import asyncio
 import datetime
@@ -25,7 +22,7 @@ ydl_opt = {
         }
 
 intents = discord.Intents().all()
-client = commands.Bot(command_prefix=['!', ';'], intents=intents)
+client = commands.Bot(command_prefix=['!', ';;', ';'], intents=intents)
 
 guilds = dict()
 
@@ -39,6 +36,7 @@ async def initialize_guild(guild_id):
     guilds[guild_id]['voice'] = None
     guilds[guild_id]['queue'] = list()
     guilds[guild_id]['lastaction'] = None
+    guilds[guild_id]['lastjoin'] = None
 
 
 async def get_voice(ctx):
@@ -87,6 +85,12 @@ async def play(ctx, *args):
         voice = await get_voice(ctx)
     else:
         return
+
+    if len(voice.channel.members) == 1:
+        await voice.disconnect()
+        guilds[ctx.guild.id]['voice'] = None  # dictionary will not update after disconnect, not sure why
+        voice = await get_voice(ctx)
+
 
     if guilds[ctx.guild.id]['member']:
         await stop_playwith(voice, ctx.guild.id)
@@ -185,6 +189,10 @@ async def playwith(ctx, *args):
     else:
         return
 
+    if len(voice.channel.members) == 1:
+        await voice.disconnect()
+        guilds[ctx.guild.id]['voice'] = None
+        voice = await get_voice(ctx)
 
     if guilds[ctx.guild.id]['member']:
         if guilds[ctx.guild.id]['member'] == member:
@@ -264,10 +272,23 @@ async def on_member_update(before, after):
 async def on_voice_state_update(member, before, after):
     global guilds
 
+    if member.guild.id in guilds:
+        voice = guilds[member.guild.id]['voice']
+
     if member == client.user:
         if before.channel and not after.channel:
             await initialize_guild(member.guild.id)
             await remove_mp3(member.guild.id)
+    else:
+        if (member.guild.id in guilds) and voice and voice.channel:
+
+            if not before.channel and after.channel and after.channel and after.channel == voice.channel:
+                guilds[member.guild.id]['lastjoin'] = datetime.datetime.utcnow()
+
+            elif before.channel and not after.channel and before.channel == voice.channel and len(voice.channel.members) == 1:
+                await asyncio.sleep(60)
+                if not guilds[member.guild.id]['lastjoin'] or (datetime.datetime.utcnow() - guilds[member.guild.id]['lastjoin']).total_seconds() > 60:
+                    await voice.disconnect()
 
 
 async def timeout(guild_id):
