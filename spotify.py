@@ -80,10 +80,8 @@ class SpotifyCog(commands.Cog):
             await messages.duplicate_members(ctx, member)
 
         member = members[0]
-        print("Found member")
 
         if member == server.following:
-            print("Listening to user")
             return
 
 
