@@ -21,6 +21,16 @@ async def skip(ctx):
     await ctx.message.add_reaction(emoji)
 
 
+async def undo(ctx):
+    emoji = '\U0001f595'
+    await ctx.message.add_reaction(emoji)
+
+
+async def clear(ctx):
+    emoji = '\U0001f595'
+    await ctx.message.add_reaction(emoji)
+
+
 async def pw(ctx, member, title, url):
     embed = discord.Embed(
         description = "**%s [%s](%s) [%s]**" % (style("Now Playing"), style(title), url, ctx.author.mention)

@@ -14,11 +14,13 @@ class CommandsCog(commands.Cog):
     async def skip(self, ctx):
         if ctx.guild.id in servers:
             server = servers[ctx.guild.id]
+
             await messages.skip(ctx)
-            if server.following and server.voice.is_playing():
-                server.voice.stop()
+            if server.following:
                 server.following = None
-            elif server.voice.is_playing():
+
+            if server.voice.is_playing():
+                server.voice.stop()
                 server.voice.stop()
             elif server.queue:
                 server.queue.pop(0)
@@ -31,6 +33,25 @@ class CommandsCog(commands.Cog):
             server = servers[ctx.guild.id]
             if server.voice.is_connected():
                 await server.voice.disconnect()
+
+    @commands.command(aliases=['c'])
+    async def clear(self, ctx):
+        if ctx.guild.id in servers:
+            server = servers[ctx.guild.id]
+            if server.queue:
+                server.queue = []
+                print(server.queue)
+                await messages.clear(ctx)
+
+
+    @commands.command(aliases=['u'])
+    async def undo(self, ctx):
+        if ctx.guild.id in servers:
+            server = servers[ctx.guild.id]
+            if server.queue:
+                server.queue.pop()
+                print(server.queue)
+                await messages.undo(ctx)
 
 
 def setup(bot):

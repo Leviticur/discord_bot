@@ -44,7 +44,7 @@ class SpotifyCog(commands.Cog):
         server.voice.source.volume = .3
 
 
-    @commands.command(aliases=[])
+    @commands.command(aliases=['playwith'])
     async def pw(self, ctx, *args):
         global servers
         arg = ' '.join(args).lower()

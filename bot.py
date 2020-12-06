@@ -107,8 +107,6 @@ async def next_song(ctx, server):
         print("Not connected to voice")
         
 
-
-
 async def play_song(ctx, server):
     server.voice.play(discord.FFmpegPCMAudio(str(ctx.guild.id) + ".mp3"), after=lambda e: asyncio.run_coroutine_threadsafe(next_song(ctx, server), client.loop))
     server.voice.source = discord.PCMVolumeTransformer(server.voice.source)
