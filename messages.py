@@ -2,54 +2,41 @@ import discord
 from styling import style
 
 
-async def send_queue_message(ctx, video_title, url):
+async def queued(ctx, title, url):
     embed = discord.Embed(
-        description = f"**{style('Queued')} [{style(video_title)}]({url}) [{ctx.author.mention}]**"
+        description = "**%s [%s](%s) [%s]**" % (style("Queued "), style(title), url, ctx.author.mention)
     )
     await ctx.send(embed=embed)
 
 
-async def send_now_playing_message(ctx, video_title, url):
+async def now_playing(ctx, title, url):
     embed = discord.Embed(
-        title = f"{style('Now Playing')}",
-        description = f"**[{style(video_title)}]({url}) [{ctx.author.mention}]**"
+        title = style("Now Playing"),
+        description = "**[%s](%s) [%s]**" % (style(title), url, ctx.author.mention)
+    )
+    await ctx.send(embed=embed)
+
+async def skip(ctx):
+    emoji = '\U0001f595'
+    await ctx.message.add_reaction(emoji)
+
+
+async def pw(ctx, member, title, url):
+    embed = discord.Embed(
+        description = "**%s [%s](%s) [%s]**" % (style("Now Playing"), style(title), url, ctx.author.mention)
     )
     await ctx.send(embed=embed)
 
 
-async def send_multiple_members_message(ctx, member):
+async def not_playing_song(ctx, member):
     embed = discord.Embed(
-        description = f"**{style('Listening with ')} {style(member.name)}#{member.discriminator}. {style('For more precise results include a tag in command (e.g. Name#0000)')} [{ctx.author.mention}]**"
+        description = "**%s [%s]**" % (style("Waiting for %s to play a song on Spotify" % member.name), ctx.author.mention)
     )
     await ctx.send(embed=embed)
 
 
-
-async def send_playwith_message(ctx, member, video_title, url):
+async def duplicate_members(ctx, member):
     embed = discord.Embed(
-        title = f"**{style('Spotify with')} {style(member.name)}**",
-        description = f"**{style('Now Playing')} [{style(video_title)}]({url}) [{ctx.author.mention}]**"
-    )
-    await ctx.send(embed=embed)
-
-
-async def send_not_playing_song_message(ctx, member):
-    embed = discord.Embed(
-        title = f"**{style('Spotify with')} {style(member.name)}**",
-        description = f"**{style('Waiting for')} {style(member.name)} {style('to play a song on Spotify')} [{ctx.author.mention}]**"
-    )
-    await ctx.send(embed=embed)
-
-
-async def send_undo_message(ctx):
-    embed = discord.Embed(
-        description = f"**{style('Removed Song from Queue')}[{ctx.author.mention}]**"
-    )
-    await ctx.send(embed=embed)
-
-
-async def send_clear_message(ctx):
-    embed = discord.Embed(
-        description = f"**{style('Cleared Queue')} [{ctx.author.mention}]**"
+        description = "**%s [%s]**" % (style("Listening with %s#%s For more precise results include in tag in command (e.g. Name#0000)" % (member.name, member.discriminator)), ctx.author.mention)
     )
     await ctx.send(embed=embed)

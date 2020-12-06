@@ -12,6 +12,3 @@ def style(string):
 
 
 
-
-
-
