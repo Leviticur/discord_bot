@@ -13,7 +13,7 @@ import messages
 
 
 intents = discord.Intents().all()
-client = commands.Bot(command_prefix=['?', ], intents=intents)
+client = commands.Bot(command_prefix=['!', ';;', ';'], intents=intents)
 
 servers = dict()
 
@@ -155,4 +155,4 @@ async def on_voice_state_update(member, before, after):
 
 client.load_extension('bot_commands')
 client.load_extension('spotify')
-client.run("Nzg0ODkwNTIxOTEwMjQ3NDc1.X8v4Qg.edgIeJPSnTc_MffwOJe1sagvy78")
+client.run(os.environ.get('DISCORD_TOKEN'))
