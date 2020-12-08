@@ -2,19 +2,20 @@ import discord
 from styling import style
 
 
-async def queued(ctx, title, url):
+async def queued(ctx, title, url, send=True):
     embed = discord.Embed(
         description = "**%s [%s](%s) [%s]**" % (style("Queued "), style(title), url, ctx.author.mention)
     )
-    await ctx.send(embed=embed)
+    return await ctx.send(embed=embed) if send else embed
 
 
-async def now_playing(ctx, title, url):
+async def now_playing(ctx, title, url, send=True):
     embed = discord.Embed(
         title = style("Now Playing"),
         description = "**[%s](%s) [%s]**" % (style(title), url, ctx.author.mention)
     )
-    await ctx.send(embed=embed)
+    return await ctx.send(embed=embed) if send else embed
+
 
 async def skip(ctx):
     emoji = '\U0001f595'

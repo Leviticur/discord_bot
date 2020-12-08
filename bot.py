@@ -77,9 +77,8 @@ async def play(ctx, *args):
 
 
     if server.voice and server.voice.is_playing():  
-        server.queue.append(url)
-        await messages.queued(ctx, title, url)
-        print(server.queue)
+        queue_message = await messages.queued(ctx, title, url)
+        server.queue.append(dict(title=title, url=url, message=queue_message))
 
 
     elif ctx.author.voice:  
@@ -99,9 +98,10 @@ async def next_song(ctx, server):
         await timeout(server)
 
     elif server.voice.is_connected():  
-        print("Next song called")
+        now_playing_message = await messages.now_playing(ctx, server.queue[0]['title'], server.queue[0]['url'], send=False)
+        await server.queue[0]['message'].edit(embed=now_playing_message)
         await remove_mp3(ctx.guild.id)
-        await download_song(server.queue[0], ctx.guild.id)
+        await download_song(server.queue[0]['url'], ctx.guild.id)
         await play_song(ctx, server)
         server.queue.pop(0)
 
