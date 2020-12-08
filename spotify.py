@@ -89,7 +89,7 @@ class SpotifyCog(commands.Cog):
         server.lastaction = datetime.datetime.utcnow()
         server.queue = []
 
-        if (server.voice and server.voice.is_connected() and len(ctx.author.voice.channel.members) == 1):  
+        if (server.voice and server.voice.is_connected() and len(server.voice.channel.members) == 1):  
             await server.voice.disconnect()
             server.voice = await ctx.author.voice.channel.connect()
 

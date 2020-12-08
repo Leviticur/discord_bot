@@ -1,3 +1,5 @@
+# If going to add functionality move play, play_song, next_song, timeout into file play.py
+# Keep client, Server, servers, on_voice_state_update
 import os
 import datetime
 import asyncio
@@ -65,7 +67,7 @@ async def play(ctx, *args):
 
 
     if (ctx.author.voice and server.voice and server.voice.is_connected()
-        and len(ctx.author.voice.channel.members) == 1):  
+        and len(server.voice.channel.members) == 1):  
 
         await server.voice.disconnect()  
         server.voice = await ctx.author.voice.channel.connect()
@@ -117,7 +119,6 @@ async def timeout(server):
     await asyncio.sleep(60)
     if (datetime.datetime.utcnow() - server.lastaction).total_seconds() > 60:
         await server.voice.disconnect()
-
 
 @client.event
 async def on_voice_state_update(member, before, after):
