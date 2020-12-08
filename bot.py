@@ -29,6 +29,7 @@ class Server:
         self.following = None
         self.lastaction = None
         self.lastjoin = None
+        self.pw_message = None
 
 
 @client.command(aliases=['p'])
@@ -55,6 +56,7 @@ async def play(ctx, *args):
 
 
     if arg.startswith('https://'):  
+        # url_parse(url) if /playlsit playlist(url)
         url = arg
         url = url[:url.find("&")]   
         title = youtube.get_title(url)
@@ -137,6 +139,7 @@ async def on_voice_state_update(member, before, after):
                     print("Bot did not reconnect within 2 second clearing queue")
                     server.queue = []
                     server.following = None
+                    server.pw_message = None
                     print(server.queue)
         else:
             if server.voice and server.voice.channel:
@@ -155,4 +158,4 @@ async def on_voice_state_update(member, before, after):
 
 client.load_extension('bot_commands')
 client.load_extension('spotify')
-client.run(os.environ.get('DISCORD_TOKEN'))
+client.run(os.environ.get('DEV_DISCORD_TOKEN'))

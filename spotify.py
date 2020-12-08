@@ -8,6 +8,7 @@ from bot import Server, servers
 from downloads import remove_mp3, download_song
 from youtube_search import YoutubeSearch
 
+import youtube
 import messages
 
 
@@ -59,6 +60,11 @@ class SpotifyCog(commands.Cog):
             print("Not in voice channel")
             return
 
+        if (server.voice and server.voice.is_connected() and len(server.voice.channel.members) == 1):  
+            server.following = None
+            await server.voice.disconnect()
+            server.voice = await ctx.author.voice.channel.connect()
+
 
         members = []
         for member in ctx.guild.members:
@@ -89,9 +95,6 @@ class SpotifyCog(commands.Cog):
         server.lastaction = datetime.datetime.utcnow()
         server.queue = []
 
-        if (server.voice and server.voice.is_connected() and len(server.voice.channel.members) == 1):  
-            await server.voice.disconnect()
-            server.voice = await ctx.author.voice.channel.connect()
 
         if not server.voice or (server.voice and not server.voice.is_connected()):  
             server.voice = await ctx.author.voice.channel.connect()
@@ -111,7 +114,7 @@ class SpotifyCog(commands.Cog):
                 url = 'https://youtube.com' + results.videos[0]['url_suffix']
                 title = results.videos[0]['title']
 
-                await messages.pw(ctx, member, title, url)
+                server.pw_message = dict(message=await messages.pw(ctx, member, title, url), ctx=ctx)
 
                 await remove_mp3(ctx.guild.id)
                 await download_song(url, ctx.guild.id)
@@ -119,8 +122,7 @@ class SpotifyCog(commands.Cog):
                 timestamp = (datetime.datetime.utcnow() - start).total_seconds()
                 await self.play_song(server, ctx.guild.id, timestamp) 
         else:
-            await messages.not_playing_song(ctx, member)
-
+            server.pw_message = dict(message=await messages.waiting_for_user(ctx, member), ctx=ctx)
 
     @commands.Cog.listener()    
     async def on_member_update(self, before, after):
@@ -145,6 +147,12 @@ class SpotifyCog(commands.Cog):
                         server.lastaction = datetime.datetime.utcnow()
 
                         url = 'https://youtube.com' + results.videos[0]['url_suffix']
+                        title = youtube.get_title(url)
+
+                        if server.pw_message:
+                            pw_message = await messages.pw(server.pw_message['ctx'], before, title, url, send=False)
+                            await server.pw_message['message'].edit(embed=pw_message)
+
                         await remove_mp3(before.guild.id)
                         await download_song(url, before.guild.id)
 

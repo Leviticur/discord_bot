@@ -18,9 +18,9 @@ class CommandsCog(commands.Cog):
             await messages.skip(ctx)
             if server.following:
                 server.following = None
-
+            if server.pw_message: 
+                server.pw_message = None
             if server.voice.is_playing():
-                server.voice.stop()
                 server.voice.stop()
             elif server.queue:
                 server.queue.pop(0)
