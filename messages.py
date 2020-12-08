@@ -34,7 +34,7 @@ async def clear(ctx):
 
 async def pw(ctx, member, title, url):
     embed = discord.Embed(
-        description = "**%s [%s](%s) [%s]**" % (style("Now Playing"), style(title), url, ctx.author.mention)
+        description = "**%s [%s](%s) %s [%s] [%s]**" % (style("Now Playing"), style(title), url, style("with"), member.mention, ctx.author.mention)
     )
     await ctx.send(embed=embed)
 

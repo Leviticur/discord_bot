@@ -56,6 +56,7 @@ async def play(ctx, *args):
 
     if arg.startswith('https://'):  
         url = arg
+        url = url[:url.find("&")]   
         title = youtube.get_title(url)
     else:
         results = YoutubeSearch(arg, max_results=1)
