@@ -53,7 +53,8 @@ class PlayCog(commands.Cog):
         if arg.startswith('https://'):  
             # url_parse(url) if /playlsit playlist(url)
             url = arg
-            url = url[:url.find("&")]   
+            if '&' in url:
+                url = url[:url.find("&")]
             title = youtube.get_title(url)
         else:
             results = YoutubeSearch(arg, max_results=1)
