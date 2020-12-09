@@ -5,6 +5,7 @@ import youtube_dl
 ydl_opt = {
     'format': 'bestaudio/best',
     'outtmpl': '',
+    'cookies': 'youtube.com_cookies.txt',
     'postprocessors': [{
         'key': 'FFmpegExtractAudio',
         'preferredcodec': 'mp3',

@@ -1,5 +1,3 @@
-# If going to add functionality move play, play_song, next_song, timeout into file play.py
-# Keep client, Server, servers, on_voice_state_update
 import os
 import datetime
 import asyncio
