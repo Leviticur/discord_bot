@@ -7,7 +7,6 @@ youtube = build('youtube', 'v3', developerKey=os.environ.get('YOUTUBE_TOKEN'))
 def get_title(url):
     url_data = urlparse.urlparse(url)
     query = urlparse.parse_qs(url_data.query)
-    print(query)
     video_id = query["v"][0]
 
 

@@ -67,4 +67,4 @@ async def on_voice_state_update(member, before, after):
 client.load_extension('play')
 client.load_extension('spotify')
 client.load_extension('bot_commands')
-client.run(os.environ.get('DEV_DISCORD_TOKEN'))
+client.run(os.environ.get('DISCORD_TOKEN'))
