@@ -1,6 +1,7 @@
 import os
 import datetime
 import asyncio
+import urllib.parse as urlparse
 
 import discord
 from discord.ext import commands
@@ -51,11 +52,17 @@ class PlayCog(commands.Cog):
 
 
         if arg.startswith('https://'):  
-            # url_parse(url) if /playlsit playlist(url)
             url = arg
             if '&' in url:
                 url = url[:url.find("&")]
-            title = youtube.get_title(url)
+            url_data = urlparse.urlparse(url)
+            if url_data.netloc == "www.youtube.com":
+                if url_data.path == "/watch":
+                    title = youtube.get_title(url)
+
+                elif url_data.path == "/playlist":
+                    print("Playlist")
+                    return
         else:
             results = YoutubeSearch(arg, max_results=1)
             if results:
