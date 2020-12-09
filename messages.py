@@ -39,6 +39,13 @@ async def pw(ctx, member, title, url, send=True):
     return await ctx.send(embed=embed) if send else embed
 
 
+async def paused(ctx, member, title, url, send=True):
+    embed = discord.Embed(
+        description = "**[%s] %s [%s](%s) [%s]**" % (member.mention, style("Paused"), style(title), url, ctx.author.mention)
+    )
+    return await ctx.send(embed=embed) if send else embed
+
+
 async def waiting_for_user(ctx, member):
     embed = discord.Embed(
         description = "**%s [%s]**" % (style("Waiting for [%s] to play a song on Spotify" % member.mention), ctx.author.mention)
