@@ -27,7 +27,7 @@ class CommandsCog(commands.Cog):
 
 
     
-    @commands.command(aliases=['l'])
+    @commands.command(aliases=['l', 'disconnect'])
     async def leave(self, ctx):
         if ctx.guild.id in servers:
             server = servers[ctx.guild.id]

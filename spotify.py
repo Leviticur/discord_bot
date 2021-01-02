@@ -61,11 +61,6 @@ class SpotifyCog(commands.Cog):
             print("Not in voice channel")
             return
 
-        if (server.voice and server.voice.is_connected() and len(server.voice.channel.members) == 1):  
-            server.following = None
-            await server.voice.disconnect()
-            server.voice = await ctx.author.voice.channel.connect()
-
         members = []
         for member in ctx.guild.members:
             if ("%s#%s" % (member.name.lower(), member.discriminator) == arg or (member.nick
@@ -79,13 +74,14 @@ class SpotifyCog(commands.Cog):
                 members.append(member)
 
 
+        member = members[0]
+
         if len(members) == 0:
             print("Could not find user")
             return
         elif len(members) > 1:
             await messages.duplicate_members(ctx, member)
 
-        member = members[0]
 
         if member == server.following:
             return

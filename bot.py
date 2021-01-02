@@ -37,21 +37,18 @@ async def on_voice_state_update(member, before, after):
         if member == client.user:
             if not before.channel and after.channel:
                 server.lastjoin = datetime.datetime.utcnow()  # Update isolation timeout when bot joins new voice channel
-            elif before.channel and not after.channel:
-                print("Bot disconnected")
 
-                await asyncio.sleep(2)
-                if not server.voice.is_connected():
-                    print("Bot did not reconnect within 2 second clearing queue")
+            elif before.channel and not after.channel:
+
                     server.queue = []
                     server.following = None
                     server.pw_message = None
-                    print(server.queue)
+                    await remove_mp3(member.guild.id)
         else:
             if server.voice and server.voice.channel:
-                print("")
                 if not before.channel and after.channel and after.channel == server.voice.channel:
                     server.lastjoin = datetime.datetime.utcnow()  # Update isolation timeout when someone joins bot's voice channel
+
                 elif (before.channel and before.channel == server.voice.channel
                       and len(server.voice.channel.members) == 1):
                   

@@ -72,25 +72,14 @@ class PlayCog(commands.Cog):
                 print("Search terms yielded no results")
 
 
-        if (ctx.author.voice and server.voice and server.voice.is_connected()
-            and len(server.voice.channel.members) == 1):  
-
-            await server.voice.disconnect()  
-            server.voice = await ctx.author.voice.channel.connect()
-
-            if server.queue:
-                await next_song(ctx, server)
-
-
         if server.voice and server.voice.is_playing():  
             queue_message = await messages.queued(ctx, title, url)
             server.queue.append(dict(title=title, url=url, message=queue_message))
 
 
-        elif ctx.author.voice:  
+        else:
 
-
-            if ctx.author.voice.channel == server.voice.channel:
+            if ctx.author.voice and ctx.author.voice.channel == server.voice.channel:
                 server.lastaction = datetime.datetime.utcnow() 
                 await messages.now_playing(ctx, title, url)
                 await remove_mp3(ctx.guild.id)
