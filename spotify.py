@@ -74,13 +74,14 @@ class SpotifyCog(commands.Cog):
                 members.append(member)
 
 
-        member = members[0]
 
         if len(members) == 0:
             print("Could not find user")
             return
         elif len(members) > 1:
-            await messages.duplicate_members(ctx, member)
+            await messages.duplicate_members(ctx, members[0])
+
+        member = members[0]
 
 
         if member == server.following:
